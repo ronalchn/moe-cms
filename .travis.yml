@@ -13,7 +13,7 @@ before_script:
   - sudo chmod 4750 obj/isolate/isolate
 
 script:
-  - echo "Linux Kernel: "`uname -r`
+  - echo "Linux Kernel:" "`uname -r`"
   - ./obj/isolate/isolate --init
   - ./obj/isolate/isolate --run -- /bin/ls /
   - ./obj/isolate/isolate --cleanup

@@ -37,13 +37,6 @@
 #define UNUSED __attribute__((unused))
 #define ARRAY_SIZE(a) (int)(sizeof(a)/sizeof(a[0]))
 
-//#ifndef MOUNT_FLAGS
-//#define MOUNT_FLAGS 0
-//#endif
-//#ifndef CLONE_FLAGS
-//#define CLONE_FLAGS 0
-//#endif
-
 static int timeout;			/* milliseconds */
 static int wall_timeout;
 static int extra_timeout;
@@ -1176,14 +1169,8 @@ setup_root(void)
    * appearing outside of our namespace.
    * (systemd since version 188 mounts filesystems shared by default).
    */
-  if (MOUNT_FLAGS != 0) {
-    fprintf(stderr,"Privatizing mounts...\n");
-    if (mount(NULL, "/", NULL, MOUNT_FLAGS, NULL) < 0)
-      die("Cannot privatize mounts: %m");
-  }
-  else {
-    fprintf(stderr,"Private mounts disabled.\n");
-  }
+  if (mount(NULL, "/", NULL, MS_REC|MS_PRIVATE, NULL) < 0)
+    die("Cannot privatize mounts: %m");
 
   if (mount("none", "root", "tmpfs", 0, "mode=755") < 0)
     die("Cannot mount root ramdisk: %m");

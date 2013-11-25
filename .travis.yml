@@ -17,3 +17,4 @@ script:
   - ./obj/isolate/isolate --init
   - ./obj/isolate/isolate --run -- /bin/ls /
   - ./obj/isolate/isolate --cleanup
+

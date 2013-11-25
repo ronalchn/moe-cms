@@ -1,0 +1,19 @@
+language: cpp
+
+env:
+  - MOUNT_FLAGS=0 CLONE_FLAGS=0
+  - MOUNT_FLAGS="MS_REC|MS_PRIVATE" CLONE_FLAGS=0
+  - MOUNT_FLAGS=0 CLONE_FLAGS="CLONE_NEWIPC|CLONE_NEWNET|CLONE_NEWPID"
+  - MOUNT_FLAGS="MS_REC|MS_PRIVATE" CLONE_FLAGS="CLONE_NEWIPC|CLONE_NEWNET|CLONE_NEWPID"
+
+before_script:
+  - ./configure
+  - make CEXTRA="-DMOUNT_FLAGS='$MOUNT_FLAGS' -DCLONE_FLAGS='$CLONE_FLAGS'"
+  - sudo chown root obj/isolate/isolate
+  - sudo chmod 4750 obj/isolate/isolate
+
+script:
+  - echo "Linux Kernel: "`uname -r`
+  - ./obj/isolate/isolate --init
+  - ./obj/isolate/isolate --run -- /bin/ls /
+  - ./obj/isolate/isolate --cleanup
